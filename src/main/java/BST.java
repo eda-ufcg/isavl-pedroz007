@@ -1,6 +1,9 @@
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class BST {
 
@@ -8,16 +11,39 @@ public class BST {
     private int size;
 
     public boolean isAVL() {
-        //TODO: implementar
-        return false;
+        return emLargura(root);
+    }
+
+    private boolean emLargura(Node no){
+        Deque<Node> fila = new ArrayDeque<Node>();
+
+        if (no != null) {
+            fila.addFirst(no);
+
+            while (!fila.isEmpty()) {
+
+                Node atual = fila.removeFirst();
+
+                if(Math.abs(balance(atual)) > 1) return false;
+
+                if (atual.left != null) {
+                    fila.add(atual.left);
+                }
+
+                if (atual.right != null) {
+                    fila.add(atual.right);
+                }   
+            }
+        }
+        return true;
+
     }
 
     /**
      * Retorna a altura da árvore.
      */
     public int height() {
-        //TODO implementar
-        return -1;
+        return height(root);
     }
 
     /**
@@ -25,11 +51,13 @@ public class BST {
      * para recursão e para o balance.
      */
     private int height(Node node) {
-        return -1;
+        if (node == null) {return -1;}
+
+        return 1 + Math.max(height(node.right), height(node.left));
     }
 
     private int balance(Node node) {
-        return -1;
+        return (height(node.left) - height(node.right));
     }
 
     /**
@@ -431,6 +459,16 @@ class Node {
 
     public boolean isLeaf() {
         return this.left == null && this.right == null;
+    }
+
+    public int getAltura(){
+        return getAltura(this);
+    }
+
+    private int getAltura(Node atual){
+        if (atual == null) {return -1;}
+
+        return 1 + Math.max(getAltura(atual.left), getAltura(atual.right));
     }
     
 }
